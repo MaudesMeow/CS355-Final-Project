@@ -38,14 +38,6 @@ $password = stripcslashes($password);
 // echo "    Username: ";
 // echo $hashed_username;
 
-// $stmt = $conn->prepare("UPDATE logins SET username = '$hashed_username' WHERE username = '$username'");
-
-// $stmt->execute();
-// $stmt = $conn->prepare("UPDATE logins SET password = '$hashed_password' WHERE username = '$hashed_username'");
-// $stmt->execute();
-
-//$hashed_password = password_hash($password, PASSWORD_DEFAULT);
-//$hashed_username = password_hash($username, PASSWORD_DEFAULT);
 //-----------------------------------------------------------------------------------------------------------------
 $hashed_password = md5($password);
 $hashed_username = md5($username);
