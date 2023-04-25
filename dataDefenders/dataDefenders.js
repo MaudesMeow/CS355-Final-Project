@@ -275,8 +275,6 @@ const ddtabList = [
     "ddcams",
     "ddreport",
     "ddMsg",
-    /* Added for test area */
-    "testArea"
 ];
 const ddTabs = ddtabList.map((id) => document.getElementById(id));
 var placeholder;
@@ -549,14 +547,7 @@ function updateLogStatus() {
             const cells = rows[i].getElementsByTagName("td");
             cells[0].textContent = returnDate();
             cells[1].textContent = returnTime(i);
-            if(ddDoSArray.attackerIP == null)
-            {
-              cells[2].textContent = finalIPvalue();
-            }
-            else
-            {
-              cells[2].textContent = ddDoSArray.attackerIP
-            }
+            cells[2].textContent = finalIPvalue();
             cells[3].textContent =
                 requestMethods[getRandomInt(0, requestMethods.length - 1)];
             cells[4].textContent = urls[getRandomInt(0, urls.length - 1)];
@@ -696,8 +687,8 @@ function addMessage(ddMsgSender, ddDateMessage, ddwebsiteName, ddMessage) {
         messageContainer.innerHTML = "";
 
         // Create a new message div element
-        const messageTopDiv = document.createElement("div");
-        messageTopDiv.classList.add("ddMessageTop");
+        const messageWholeDiv = document.createElement("div");
+        messageWholeDiv.classList.add("ddMessageDiv");
 
         // Add the message content to the message div
         const messageFromDiv = document.createElement("div");
@@ -705,21 +696,21 @@ function addMessage(ddMsgSender, ddDateMessage, ddwebsiteName, ddMessage) {
         const messageDomainDiv = document.createElement("div");
         //add \r\n in text everywhere You want for line-break (new line)
         messageFromDiv.textContent = "From: " + ddMsgSender + "\r\n";
-        messageTopDiv.appendChild(messageFromDiv);
-        messageTopDiv.appendChild(document.createElement("hr"));
+        messageWholeDiv.appendChild(messageFromDiv);
+        messageWholeDiv.appendChild(document.createElement("hr"));
         messageSentDiv.textContent = "Sent on: " + ddDateMessage + "\r\n";
-        messageTopDiv.appendChild(messageSentDiv);
-        messageTopDiv.appendChild(document.createElement("hr"));
+        messageWholeDiv.appendChild(messageSentDiv);
+        messageWholeDiv.appendChild(document.createElement("hr"));
         messageDomainDiv.textContent = "Website Domain: " + ddwebsiteName + "\r\n";
-        messageTopDiv.appendChild(messageDomainDiv);
-        messageTopDiv.appendChild(document.createElement("hr"));
+        messageWholeDiv.appendChild(messageDomainDiv);
+        messageWholeDiv.appendChild(document.createElement("hr"));
 
         const messageDiv = document.createElement("div");
         messageDiv.textContent = ddMessage;
-        messageTopDiv.appendChild(messageDiv);
+        messageWholeDiv.appendChild(messageDiv);
 
         // Add the message div to the message container
-        messageContainer.appendChild(messageTopDiv);
+        messageContainer.appendChild(messageWholeDiv);
     });
 
     // Add the sender name and date to the sender box
@@ -795,11 +786,10 @@ function intMsg() {
 // new content
 // Info Book on/off
 function displayInfoBooklet() {
-    document.getElementById("ddInfoBook").classList.remove("hide");
+    document.getElementById("ddInfoBook").classList.toggle("hide");
 }
-
-function removeInfoBooklet() {
-    document.getElementById("ddInfoBook").classList.add("hide");
+function displayddNotes() {
+    document.getElementById("ddNotes").classList.toggle("hide");
 }
 
 var current_page = 1;
@@ -882,9 +872,9 @@ var ddDoSArray =
 
 
 function dd_createDoS() {
-  if(ddAttackCount != 2)
+  if(ddAttackCount != 2 && ddDoSArray.attackID == null)
   {
-    ddDoSArray.attackID == ddAttackCount;
+    ddDoSArray.attackID = ddAttackCount;
     var ddAttackedWebsite = websites[Math.floor(Math.random() * websites.length)];
     ddDoSArray.websiteIP = ddAttackedWebsite.ipAddress;
     ddDoSArray.serverNumber = ddAttackedWebsite.serverID;
@@ -896,9 +886,10 @@ function dd_createDoS() {
     ddDoSArray.attackerIP = ip;
 
     var serverChangeid = ddDoSArray.serverNumber.split('Server ')[1];
-    ddAttackedWebsite.webStatus = 2
+    ddAttackedWebsite.webStatus = 1
     ddServState[serverChangeid - 1] = 1
-
+    createWebsiteTable();
+    console.log(ddDoSArray)
     //update website table for all websites connected to down server
     //in effected server display random attacker IP and website IP
     //send message from all people in using effected server that it is running slow
@@ -918,68 +909,30 @@ const ddComplaintsDoS = [
   "I think I'm being targeted by a DDoS attack!"
 ];
 
-/*function dd_createDoS(ddAttackID) {
-  for (i = 0; i <= ddDoSArray.length; i++) {
-      if (ddDoSArray[i].attackID == ddAttackID) {
-          //grab website
-          //generate random attacker IP
-          //define server hosting the website
-          //update ddDoSArray with attack information
-          //update server status to 1 (DoS will never hit status 2)
-          //update website table for all websites connected to down server
-          //in effected server display random attacker IP and website IP
-          //send message from all people in using effected server that it is running slow
-      }
-  }
-}*/
-
-var ddMalwareArray = [
-    {
-        attackID: 0,
+var ddMalwareArray ={
+        attackID: null,
         websiteDom: null,
         serverNumber: null,
         targetFile: null,
-    },
-    {
-        attackID: 1,
-        websiteDom: null,
-        serverNumber: null,
-        targetFile: null,
-    },
-    {
-        attackID: 2,
-        websiteDom: null,
-        serverNumber: null,
-        targetFile: null,
-    },
-];
+    };
 function dd_createMalware() {
-    if (ddAttackCount != 2) {
-        ddMalwareArray[ddAttackCount].attackID == ddAttackCount
+    if (ddAttackCount != 2 && ddMalwareArray.attackID==null) {
+        ddMalwareArray.attackID = ddAttackCount;
         var ddAttackedWebsite = websites[Math.floor(Math.random() * websites.length)];
-        ddMalwareArray[ddAttackCount].websiteDom = ddAttackedWebsite.domain;
-        ddMalwareArray[ddAttackCount].serverNumber = ddAttackedWebsite.serverID;
-        ddMalwareArray[ddAttackCount].targetFile = malwareFiles[Math.floor(Math.random() * malwareFiles.length)];
-        var serverChangeid = ddMalwareArray[ddAttackCount].serverNumber.split('Server ')[1];
+        ddMalwareArray.websiteDom = ddAttackedWebsite.domain;
+        ddMalwareArray.serverNumber = ddAttackedWebsite.serverID;
+        ddMalwareArray.targetFile = malwareFiles[Math.floor(Math.random() * malwareFiles.length)];
+        var serverChangeid = ddMalwareArray.serverNumber.split('Server ')[1];
         ddAttackedWebsite.webStatus = 2
         ddServState[serverChangeid - 1] = 1
+        console.log(ddMalwareArray)
         createWebsiteTable();
         ddAttackCount++;
         websites.forEach((website) => {
-            var minMsg = minuteCount;
-            var dayMsg = dayCount;
-            if (minuteCount < 10) {
-                minMsg = "0" + minuteCount;
-            }
-            if (dayCount < 10) {
-                dayMsg = "00" + dayCount;
-            } else if (dayCount < 100) {
-                dayMsg = "0" + dayCount;
-            }
-            if(ddAttackedWebsite.domain == website.domain){
+            if (ddAttackedWebsite.domain == website.domain) {
                 addMessage(
                     website.name,
-                    `Day ${dayMsg} ${hourCount}:${minMsg} ${dayhalf}`,
+                    ddReturnDayAndTime(),
                     website.domain,
                     ddpopUpAds[Math.floor(Math.random() * ddpopUpAds.length)]
                 );
@@ -987,7 +940,7 @@ function dd_createMalware() {
             else if (website.serverID.split('Server ')[1] == serverChangeid) {
                 addMessage(
                     website.name,
-                    `Day ${dayMsg} ${hourCount}:${minMsg} ${dayhalf}`,
+                    ddReturnDayAndTime(),
                     website.domain,
                     ddWebsiteRunningSlow[Math.floor(Math.random() * ddWebsiteRunningSlow.length)]
                 );
@@ -995,6 +948,20 @@ function dd_createMalware() {
         });
     }
 }
+function ddReturnDayAndTime() {
+    var minMsg = minuteCount;
+    var dayMsg = dayCount;
+    if (minuteCount < 10) {
+        minMsg = "0" + minuteCount;
+    }
+    if (dayCount < 10) {
+        dayMsg = "00" + dayCount;
+    } else if (dayCount < 100) {
+        dayMsg = "0" + dayCount;
+    }
+    return `Day ${dayMsg} ${hourCount}:${minMsg} ${dayhalf}`;
+}
+
 var malwareFiles = ["secure.jar", "setup.exe", "keygen.exe", "patch.exe", "virus.exe", "trojan.exe", "ransomware.exe",
     "spyware.exe", "adware.exe", "rootkit.exe", "backdoor.exe", "exploit.doc", "payload.exe", "worm.exe", "exploit.js", "exploit.php", "exploit.asp"];
 const ddWebsiteRunningSlow = [
@@ -1040,4 +1007,202 @@ const ddpopUpAds = [
     "My website is completely overrun with pop-up ads",
     "I'm about ready to abandon my website because of the pop-up ads",
     "My website is making it impossible to get anything done with all the pop-up ads"
-  ];
+];
+
+
+function createMalwareForm() {
+    document.getElementById('ddReportType').classList.add('hide');
+    document.getElementById('ddReportFormContainer').classList.remove('hide');
+
+    const ddForm = document.createElement('form');
+    ddForm.classList.add('ddReportform');
+
+    const ddReportheader = document.createElement('h1');
+    ddReportheader.classList.add('ddreportHeader')
+    ddReportheader.textContent = 'Malware Report Form';
+    ddForm.appendChild(ddReportheader);
+    ddForm.appendChild(document.createElement('hr'));
+    ddForm.appendChild(document.createElement('br'));
+    const websiteLabel = document.createElement('label');
+    websiteLabel.textContent = 'Website Domain:';
+    const websiteInput = document.createElement('input');
+    websiteInput.type = 'text';
+    websiteInput.name = 'website-domain';
+    websiteInput.required = true;
+    websiteLabel.appendChild(websiteInput);
+    ddForm.appendChild(websiteLabel);
+    ddForm.appendChild(document.createElement('br'));
+
+    const serverLabel = document.createElement('label');
+    serverLabel.textContent = 'Affected Server ID:';
+    const serverSelect = document.createElement('select');
+    serverSelect.name = 'affected-server-id';
+    serverSelect.required = true;
+    const option1 = document.createElement('option');
+    option1.value = '1';
+    option1.textContent = 'Server 1';
+    serverSelect.appendChild(option1);
+    const option2 = document.createElement('option');
+    option2.value = '2';
+    option2.textContent = 'Server 2';
+    serverSelect.appendChild(option2);
+    const option3 = document.createElement('option');
+    option3.value = '3';
+    option3.textContent = 'Server 3';
+    serverSelect.appendChild(option3);
+    const option4 = document.createElement('option');
+    option4.value = '4';
+    option4.textContent = 'Server 4';
+    serverSelect.appendChild(option4);
+    serverLabel.appendChild(serverSelect);
+    ddForm.appendChild(serverLabel);
+    ddForm.appendChild(document.createElement('br'));
+    ddForm.appendChild(document.createElement('br'));
+
+    const malwareLabel = document.createElement('label');
+    malwareLabel.textContent = 'Malware File Name:';
+    const malwareInput = document.createElement('input');
+    malwareInput.type = 'text';
+    malwareInput.name = 'malware-file-name';
+    malwareInput.required = true;
+    malwareLabel.appendChild(malwareInput);
+    ddForm.appendChild(malwareLabel);
+    ddForm.appendChild(document.createElement('br'));
+
+    const fixLabel = document.createElement('label');
+    fixLabel.textContent = 'Suggested Fix:';
+
+
+
+    const checkbox1 = document.createElement('input');
+    checkbox1.type = 'checkbox';
+    checkbox1.name = 'fix-option-1';
+    const label1 = document.createElement('label');
+    checkbox1.value = 1;
+    label1.textContent = 'Option 1';
+    label1.appendChild(checkbox1);
+    const checkbox2 = document.createElement('input');
+    checkbox2.type = 'checkbox';
+    checkbox2.name = 'fix-option-2';
+    const label2 = document.createElement('label');
+    label2.textContent = 'Option 2';
+    checkbox2.value = 2;
+    label2.appendChild(checkbox2);
+    const checkbox3 = document.createElement('input');
+    checkbox3.type = 'checkbox';
+    checkbox3.name = 'fix-option-3';
+    const label3 = document.createElement('label');
+    label3.textContent = 'Option 3';
+    checkbox3.value = 3;
+    label3.appendChild(checkbox3);
+    const checkbox4 = document.createElement('input');
+    checkbox4.type = 'checkbox';
+    checkbox4.name = 'fix-option-4';
+    const label4 = document.createElement('label');
+    label4.textContent = 'Option 4';
+    checkbox4.value = 4;
+    label4.appendChild(checkbox4);
+    fixLabel.appendChild(document.createElement('br'));
+    fixLabel.appendChild(label1);
+    fixLabel.appendChild(document.createElement('br'));
+    fixLabel.appendChild(label2);
+    fixLabel.appendChild(document.createElement('br'));
+    fixLabel.appendChild(label3);
+    fixLabel.appendChild(document.createElement('br'));
+    fixLabel.appendChild(label4);
+    ddForm.appendChild(fixLabel);
+    for (let i = 0; i <= 2; i++) { ddForm.appendChild(document.createElement('br')); }
+    // create the signature input field and add it to the form
+    const signatureLabel = document.createElement('label');
+    signatureLabel.textContent = 'Signature:';
+    const signatureInput = document.createElement('input');
+    signatureInput.type = 'text';
+    signatureInput.name = 'signature';
+    signatureInput.required = true;
+    signatureLabel.appendChild(signatureInput);
+    ddForm.appendChild(signatureLabel);
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Report';
+    submitButton.classList.add('ddMalSubmit');
+    const malSubmit = document.createElement('div');
+    malSubmit.classList.add('ddreportSumbit')
+    malSubmit.appendChild(submitButton);
+    ddForm.appendChild(malSubmit);
+
+
+
+    // add the form to the document
+    document.getElementById('ddReportFormContainer').appendChild(ddForm);
+
+    ddForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const websiteDomain = websiteInput.value;
+        const affectedServerId = serverSelect.value;
+        const malwareFileName = malwareInput.value;
+        const suggestedFix = [];
+        if (checkbox1.checked) {
+            suggestedFix.push(checkbox1.value);
+        }
+        if (checkbox2.checked) {
+            suggestedFix.push(checkbox2.value);
+        }
+        if (checkbox3.checked) {
+            suggestedFix.push(checkbox3.value);
+        }
+        if (checkbox4.checked) {
+            suggestedFix.push(checkbox4.value);
+        }
+        const signature = signatureInput.value;
+
+        // Do something with the form data here
+        console.log("Website Domain: " + websiteDomain)
+        console.log("Affected Server: " + affectedServerId)
+        console.log("Malware File Name: " + malwareFileName)
+        console.log("Suggested Fixes: " + suggestedFix)
+        console.log("Signature: " + signature)
+
+        ddForm.reset();
+    });
+}
+const ddCorrectMalwareResponses = [
+    "Disconnect from the internet immediately.",
+    "Identify the type of malware and conduct research on it.",
+    "Use antivirus or anti-malware software to scan your system.",
+    "Remove any infected files or programs.",
+    "Change all of your passwords.",
+    "Back up important files and data.",
+    "Update your operating system and software.",
+    "Disable any unnecessary services or applications.",
+    "Use a firewall to block unauthorized access.",
+    "Enable automatic updates for your antivirus or anti-malware software.",
+    "Install security patches for your operating system and software.",
+    "Run a deep scan of your system to find any hidden malware.",
+    "Check your system for any unauthorized changes or modifications.",
+    "Verify the integrity of your system files and restore any corrupted files.",
+    "Limit user privileges to prevent malware from spreading.",
+    "Use secure connections and protocols when accessing the internet.",
+    "Implement two-factor authentication for added security.",
+    "Train employees on safe browsing and email practices.",
+    "Monitor your system for any suspicious activity.",
+    "Consider hiring a professional to assist with malware removal and system recovery."
+];
+const ddWrongMalwareResponses = ["Ignore it, it will go away on its own.",
+    "Just delete all your files and start over.",
+    "Give your credit card information to the attacker to make them go away.",
+    "Pay the ransom demanded by the attacker.", "Call the police and report the attack.",
+    "Just unplug your computer and the malware will disappear.",
+    "Download more antivirus software to fix the problem.",
+    "Disable your firewall to allow the malware to access your system and fix it.",
+    "Enter your personal information into a pop-up ad to remove the malware.",
+    "Delete System32 to remove the malware.",
+    "Call a tech support number you found online and give them remote access to your computer.",
+    "Just ignore the strange messages and emails you're receiving.",
+    "Try to negotiate with the attacker to let you keep some of your files.",
+    "Just restart your computer and the malware will be gone.",
+    "Open and click on all suspicious links and attachments to see what happens.",
+    "Try to manually delete the malware files from your system.",
+    "Install more toolbars and plugins to fix the problem.",
+    "Just keep using your computer as normal and hope for the best.",
+    "Delete your antivirus software to remove the conflict with the malware.",
+    "Tell all your friends and family to click on the same link that infected you to see if they get the same problem."];
