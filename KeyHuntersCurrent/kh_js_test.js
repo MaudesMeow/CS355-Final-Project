@@ -217,7 +217,7 @@ function kh_startGame() {
   kh_clearNotebook();
 
   document.getElementById('numberOfGuesses').innerHTML = remainingAttempts + " attempts left";
-  document.getElementById('kh_score_keeper').innerHTML = playerSccore;
+  document.getElementById('kh_score_keeper').innerHTML = "Score: " + playerSccore;
   if (easyMode || mediumMode) {
     document.getElementById('kh_ciphers_completed').innerHTML = "You have completed " + kh_ciphers_completed + "/3 ciphers";
 
@@ -427,7 +427,7 @@ function setCorrectButton(ranValue) {
     case 1:
       isCaeser = true;
       
-      document.getElementById('kh_question').innerHTML = " a Caeser Cipher shift by " + randomCaesarCipherVal + " The column is " + ((randomCaesarCipherVal + randomCol) + 9).toString(36).toUpperCase() + " The row is " + randomRow;
+      document.getElementById('kh_question').innerHTML = "A Caesar Cipher shift by " + randomCaesarCipherVal + ". The column is " + ((randomCaesarCipherVal + randomCol) + 9).toString(36).toUpperCase() + ". The row is " + randomRow + ".";
       //document.getElementById('question_box').innerHTML = "3";
       break;
     case 2:
@@ -458,7 +458,8 @@ function setCorrectButton(ranValue) {
       
       plainTextPrompt = "polybius cipher, the answer you are looking for is " + spellOutNumber(randomRow) + " and the column is " + spellOutNumber(randomCol);
       document.getElementById('kh_question').innerHTML = GeneratePolybiusCipher(plainTextPrompt);
-      
+      document.getElementById('kh_dict_panel').innerHTML = "<img src=\"img\\dict_images\\polybiusCipher.png\" width=\"250px\" height=\"200px\">";
+
 
       const table = document.createElement('table');
 
@@ -599,7 +600,7 @@ function kh_running() {
        
       }
       
-      document.getElementById('kh_score_keeper').innerHTML = "player score is now " + playerSccore;
+      document.getElementById('kh_score_keeper').innerHTML = "Score: " + playerSccore;
       
       document.getElementById('numberOfGuesses').innerHTML = remainingAttempts + " attempts left";
       kh_btn.classList.add('kh_incorrect');
